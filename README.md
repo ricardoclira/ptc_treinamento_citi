@@ -23,7 +23,7 @@ Express                    Gerenciamento de rotas e requisições HTTP.
 Thunder Client             Testes de API e validação de rotas.
 
 6. Uso de Inteligência Artificial
-Em conformidade com o item 3 dos entregáveis do PDF, declaro que utilizei a IA Gemini (Google) como assistente durante o processo. A IA foi fundamental para:
+Conforme o item 3 do PDF, declaro que utilizei o Gemini como assistente durante o processo. O seu uso foi fundamental para:
 Diagnosticar o erro de permissão do Docker e sugerir a migração para o banco local.
 Auxiliar na estruturação dos métodos do Controller seguindo a sintaxe do Prisma.
 Ajudar no debug de erros de conexão (Connection refused).
