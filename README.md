@@ -13,14 +13,11 @@ Delete (DELETE): Função para remoção de produtos, identificando o registro p
 4. Diferencial Implementado
 Como um diferencial para a avaliação, implementei a funcionalidade de Busca por Tamanho (GET /calcados/tamanho/:tamanho). Esta função utiliza a cláusula where do Prisma para filtrar rapidamente os calçados, demonstrando a capacidade de criar consultas personalizadas para melhorar a experiência do usuário final.
 
-
-
 5. Tecnologias Utilizadas
-Tecnologia                         Finalidade
-Node.js & TypeScript       Ambiente de execução e tipagem forte para o back-end.
-Prisma ORM                 Interface de comunicação com o banco de dados PostgreSQL.
-Express                    Gerenciamento de rotas e requisições HTTP.
-Thunder Client             Testes de API e validação de rotas.
+Node.js e TypeScript -- Ambiente de execução e tipagem forte para o back-end.    
+Prisma ORM -- Interface de comunicação com o banco de dados PostgreSQL.
+Express -- Gerenciamento de rotas e requisições HTTP.
+Thunder Client -- Testes de API e validação de rotas.
 
 6. Uso de Inteligência Artificial
 Conforme o item 3 do PDF, declaro que utilizei o Gemini como assistente durante o processo. O seu uso foi fundamental para:
