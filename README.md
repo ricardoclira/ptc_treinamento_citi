@@ -1,27 +1,60 @@
-Documentação Técnica: Desafio de Desenvolvimento PTC 26.1
+Documentação Técnica: Sistema de Gestão de Estoque (PTC 26.1)
+1. Introdução
+Este documento descreve as decisões técnicas e a implementação do sistema de gerenciamento de estoque para uma loja de calçados. O objetivo foi criar uma API robusta para substituir o controle manual, permitindo operações de criação, leitura, atualização e exclusão (CRUD) de produtos.
 
-1. Resumo do Projeto
-Este projeto se baseia no desenvolvimento de um sistema de gerenciamento de estoque para uma loja de calçados (CRUD). A solução foi construída utilizando Node.js, TypeScript, Express e Prisma ORM, garantindo uma gestão eficiente e digitalizada de produtos.
-2. Decisões de Ambiente e Configuração
- Durante o desenvolvimento do sistema tive que substituir o Docker pelo PostgreSQL localmente. Ao tentar executar o Docker Installer, foram encontrados erros de permissão de sistema. Para garantir a entrega do desafio no prazo, escolhi por configurar o banco de dados diretamente na máquina local e ajustar a DATABASE_URL no arquivo .env.
-3. Implementação do CRUD (CalcadosController)
-O controlador principal foi estruturado para gerenciar as quatro operações fundamentais:
-Create (POST): Permite o cadastro de novos calçados
-Read (GET): Implementei a listagem total de calçados para obter uma visão geral do estoque.
-Update (PATCH): Configurei a atualização baseada no ID do produto, focado principalmente na alteração de preço e quantidade em estoque.
-Delete (DELETE): Função para remoção de produtos, identificando o registro pelo ID único.
-4. Diferencial Implementado
-Como um diferencial para a avaliação, implementei a funcionalidade de Busca por Tamanho (GET /calcados/tamanho/:tamanho). Esta função utiliza a cláusula where do Prisma para filtrar rapidamente os calçados, demonstrando a capacidade de criar consultas personalizadas para melhorar a experiência do usuário final.
+2. Decisões de Arquitetura e Ambiente
+2.1 Banco de Dados Local (PostgreSQL)
+Decisão: Inicialmente, o projeto previa o uso de Docker. No entanto, devido a restrições de permissão no ambiente Windows, optei por utilizar o PostgreSQL instalado localmente.
 
-5. Tecnologias Utilizadas
-Node.js e TypeScript -- Ambiente de execução e tipagem forte para o back-end.    
-Prisma ORM -- Interface de comunicação com o banco de dados PostgreSQL.
-Express -- Gerenciamento de rotas e requisições HTTP.
-Thunder Client -- Testes de API e validação de rotas.
+Implementação: Configurei o serviço do Postgres na porta 5432 e ajustei a variável DATABASE_URL no arquivo .env. Essa mudança garantiu que o desenvolvimento não fosse interrompido por falhas de infraestrutura.
 
-6. Uso de Inteligência Artificial
-Conforme o item 3 do PDF, declaro que utilizei o Gemini como assistente durante o processo. O seu uso foi fundamental para:
-Diagnosticar o erro de permissão do Docker e sugerir a migração para o banco local.
-Auxiliar na estruturação dos métodos do Controller seguindo a sintaxe do Prisma.
-Ajudar no debug de erros de conexão (Connection refused).
-A ferramenta foi utilizada para acelerar a resolução de problemas técnicos, enquanto a lógica de negócio e a organização do código foram conduzidas por mim.
+2.2 Prisma ORM e TypeScript
+Decisão: Utilizar o Prisma como ORM para facilitar a comunicação com o banco de dados sem a necessidade de escrever SQL puro, aproveitando a tipagem forte do TypeScript.
+
+Benefício: Isso reduziu erros de tempo de execução, especialmente ao lidar com tipos numéricos (como preços e tamanhos).
+
+3. Implementação das Funções (Lógica do Código)
+A lógica principal foi concentrada no CalcadosController.ts. Abaixo, explico o que cada etapa faz:
+
+A. Criação de Calçados (create)
+O que faz: Recebe os dados do produto (nome, marca, preço, etc.) via requisição POST.
+
+Decisão: Implementei uma conversão explícita para Number nos campos preco, tamanho e quantidade_em_estoque. Isso foi necessário porque o corpo da requisição pode vir como String, mas o banco de dados exige Inteiros.
+
+B. Listagem Geral (readAll)
+O que faz: Retorna todos os calçados cadastrados.
+
+Identificação: Essencial para que o lojista tenha uma visão macro do estoque.
+
+C. Busca por Tamanho (findBySize) - Diferencial
+O que faz: Filtra calçados específicos com base em um parâmetro passado na URL (ex: /calcados/tamanho/42).
+
+Implementação: Utilizei o método findMany do Prisma com a cláusula where. Essa função melhora a experiência do usuário, permitindo buscas rápidas para clientes com necessidades específicas.
+
+D. Atualização (update)
+O que faz: Permite alterar o preço ou a quantidade de um item usando o método PATCH.
+
+Lógica: O código identifica o calçado pelo id (parâmetro de rota) e atualiza apenas os campos enviados no corpo da mensagem.
+
+E. Exclusão (delete)
+O que faz: Remove permanentemente um produto do banco de dados.
+
+Identificação: Útil para produtos que saíram de linha ou erros de cadastro.
+
+4. Etapas de Desenvolvimento (Workflow)
+Modelagem: Definição do model Calcado no schema.prisma.
+
+Migração: Execução do npx prisma migrate dev para criar as tabelas fisicamente no PostgreSQL.
+
+Roteamento: Configuração do arquivo routes.ts para conectar os endereços (URLs) às funções do Controller.
+
+Testes: Validação de cada rota através do Thunder Client, simulando o uso real da loja.
+
+Versionamento: Subida do código para o GitHub, resolvendo conflitos de credenciais e permissões de repositório.
+
+5. Transparência no Uso de IA
+Seguindo as diretrizes do CITi, declaro que utilizei a IA Gemini (Google) como ferramenta assistente. A IA foi utilizada para:
+
+Auxiliar no diagnóstico de erros de permissão do Docker.
+
+Orientar a sintaxe correta das funções do Prisma dentro do TypeScript.
